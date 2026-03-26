@@ -243,54 +243,95 @@
       .cards { grid-template-columns:1fr; }
     }
 
-    /* ── GALLERY ────────────────────────────── */
-    #gallery { background: var(--bg); }
-    .gallery-hd { text-align:center; margin-bottom: 4rem; }
-
-    .masonry {
-      columns: 3; column-gap: 1.4rem;
+    /* ── CAROUSEL (shared) ─────────────────── */
+    .carousel {
+      position: relative;
+      touch-action: pan-y;
+      -webkit-user-select: none; user-select: none;
     }
-    @media (max-width:900px) { .masonry { columns:2; } }
-    @media (max-width:540px) { .masonry { columns:1; } }
-
-    .art-item {
-      break-inside: avoid; margin-bottom: 1.4rem;
-      position: relative; cursor: pointer;
-      border-radius: var(--radius); overflow: hidden;
+    .carousel-track {
+      position: relative;
     }
-    .art-item img {
-      width:100%; display:block;
+    .carousel-slide {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      animation: fadeSlide 0.4s ease;
+    }
+    .carousel-slide.active { display: flex; }
+    @keyframes fadeSlide { from { opacity: 0; } to { opacity: 1; } }
+    .carousel-img-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       border-radius: var(--radius);
-      transition: transform 0.55s ease, filter 0.3s;
+      overflow: hidden;
+    }
+    .carousel-slide img {
+      max-width: min(560px, 90vw);
+      max-height: 70vh;
+      object-fit: contain;
+      border-radius: var(--radius);
       filter: saturate(0.88);
     }
-    .art-item:hover img { transform:scale(1.045); filter:saturate(1.1); }
-
-    .art-overlay {
-      position:absolute; inset:0;
-      background: linear-gradient(to top, rgba(6,5,14,0.92) 0%, transparent 58%);
-      opacity:0; transition: opacity 0.3s;
-      display:flex; flex-direction:column; justify-content:flex-end;
-      padding:1.4rem; border-radius: var(--radius);
+    .carousel-arrow {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      background: rgba(200,145,58,0.15); border: 1px solid rgba(200,145,58,0.25);
+      color: var(--gold-lt); font-size: 1.4rem;
+      width: 44px; height: 44px;
+      border-radius: 50%; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; z-index: 5;
     }
-    .art-item:hover .art-overlay { opacity:1; }
-    .art-no {
+    .carousel-arrow:hover { background: var(--gold); color: var(--bg); }
+    .carousel-prev { left: 0.8rem; }
+    .carousel-next { right: 0.8rem; }
+    .carousel-dots {
+      display: flex; justify-content: center; gap: 0.45rem;
+      margin-top: 0.8rem; flex-wrap: wrap;
+    }
+    .carousel-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: rgba(200,145,58,0.2); border: 1px solid rgba(200,145,58,0.3);
+      cursor: pointer; transition: all 0.2s; padding: 0;
+    }
+    .carousel-dot.active { background: var(--gold); border-color: var(--gold); }
+    .carousel-counter {
+      text-align: center; margin-top: 0.6rem;
+      font-family: 'Cinzel', serif; font-size: 0.72rem;
+      letter-spacing: 0.25em; color: var(--gold);
+    }
+
+    @media (max-width: 540px) {
+      .carousel-arrow { width: 36px; height: 36px; font-size: 1.1rem; }
+      .carousel-prev { left: 0.4rem; }
+      .carousel-next { right: 0.4rem; }
+    }
+
+    /* ── GALLERY ────────────────────────────── */
+    #gallery { background: var(--bg); }
+    .gallery-hd { text-align:center; margin-bottom: 2rem; }
+
+    .gallery-slide-info {
+      margin-top: 0.6rem; text-align: center;
+    }
+    .gallery-slide-info .art-no {
       font-family:'Cinzel',serif; font-size:0.62rem;
       letter-spacing:0.32em; color:var(--gold); margin-bottom:0.25rem;
     }
-    .art-name {
+    .gallery-slide-info .art-name {
       font-family:'Cormorant Garamond',serif; font-size:0.98rem;
       color:var(--cream); margin-bottom:0.7rem;
     }
-    .scr-btn {
+    .gallery-slide-info .scr-btn {
       display:inline-flex; align-items:center; gap:0.35rem;
       font-family:'Cinzel',serif; font-size:0.68rem; letter-spacing:0.1em;
       text-transform:uppercase; color:var(--gold-lt);
       border:1px solid rgba(200,145,58,0.4);
       padding:0.38rem 0.8rem; border-radius: var(--radius);
-      transition: all 0.2s; width:fit-content;
+      transition: all 0.2s;
     }
-    .scr-btn:hover { background:var(--gold); color:var(--bg); border-color:var(--gold); }
+    .gallery-slide-info .scr-btn:hover { background:var(--gold); color:var(--bg); border-color:var(--gold); }
 
     /* ── LIGHTBOX ───────────────────────────── */
     #lightbox {
@@ -337,46 +378,88 @@
       font-family:'Cormorant Garamond',serif; font-style:italic;
       font-size:1.2rem; text-align:center;
     }
-    .photo-mosaic {
-      display:grid;
-      grid-template-columns: repeat(4, 1fr);
-      grid-auto-rows: 220px;
+    #holyCarousel .carousel-img-wrap { background: var(--surface); }
+    #holyCarousel .carousel-slide img { object-fit: cover; }
+    .hl-slide-caption {
+      margin-top: 0.8rem; text-align: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem; color: var(--cream);
+    }
+
+    /* ── FOR SALE ───────────────────────────── */
+    #for-sale { background: var(--bg); }
+    .sale-hd { text-align: center; margin-bottom: 4rem; }
+    .sale-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1.8rem;
+    }
+    .sale-card {
+      background: var(--surface2);
+      border: 1px solid rgba(200,145,58,0.14);
+      border-radius: var(--radius);
+      overflow: hidden; text-align: center;
+    }
+    .sale-placeholder {
+      aspect-ratio: 3/4;
+      background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
       gap: 1rem;
     }
-    .photo-mosaic .p-item:nth-child(1) { grid-column: span 2; grid-row: span 2; }
-    .photo-mosaic .p-item:nth-child(6) { grid-column: span 2; }
-    .photo-mosaic .p-item:nth-child(9) { grid-column: span 2; grid-row: span 2; }
+    .sale-placeholder-icon {
+      font-size: 2.8rem; opacity: 0.4;
+    }
+    .sale-placeholder-text {
+      font-family: 'Cinzel', serif;
+      font-size: 0.72rem; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--gold);
+    }
+    .sale-card-body { padding: 1.4rem; }
+    .sale-card-body h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300; font-size: 1.3rem;
+      color: var(--cream); margin-bottom: 0.4rem;
+    }
+    .sale-card-body p {
+      font-size: 0.88rem; color: var(--muted);
+    }
 
-    .p-item {
-      position:relative; overflow:hidden;
+    @media (max-width: 700px) {
+      .sale-grid { grid-template-columns: 1fr; max-width: 360px; margin: 0 auto; }
+    }
+
+    /* ── EVENTS ─────────────────────────────── */
+    #events { background: var(--surface); }
+    .events-hd { text-align: center; margin-bottom: 4rem; }
+    .event-card {
+      max-width: 680px; margin: 0 auto;
+      background: var(--surface2);
+      border: 1px solid rgba(200,145,58,0.18);
       border-radius: var(--radius);
+      padding: 3rem; text-align: center;
     }
-    .p-item img {
-      width:100%; height:100%; object-fit:cover;
-      filter:saturate(0.78);
-      transition: transform 0.55s ease, filter 0.3s;
+    .event-badge {
+      display: inline-block;
+      font-family: 'Cinzel', serif;
+      font-size: 0.62rem; letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--bg); background: var(--gold);
+      padding: 0.35rem 1.1rem; border-radius: var(--radius);
+      margin-bottom: 1.4rem;
     }
-    .p-item:hover img { transform:scale(1.07); filter:saturate(1); }
-    .p-caption {
-      position:absolute; bottom:0; left:0; right:0;
-      padding:0.7rem 0.9rem;
-      background:linear-gradient(transparent, rgba(6,5,14,0.82));
-      font-size:0.74rem; letter-spacing:0.07em; color:var(--cream);
-      opacity:0; transition:opacity 0.3s;
+    .event-card h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300; font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+      color: var(--cream); line-height: 1.25;
+      margin-bottom: 1rem;
     }
-    .p-item:hover .p-caption { opacity:1; }
-
-    @media (max-width:900px) {
-      .photo-mosaic { grid-template-columns:repeat(2,1fr); grid-auto-rows:200px; }
-      .photo-mosaic .p-item:nth-child(1) { grid-column:span 2; }
-      .photo-mosaic .p-item:nth-child(6) { grid-column:span 1; }
-      .photo-mosaic .p-item:nth-child(9) { grid-column:span 2; }
+    .event-card p {
+      font-size: 1.04rem; margin-bottom: 1.2rem;
     }
-    @media (max-width:540px) {
-      .photo-mosaic { grid-template-columns:1fr; grid-auto-rows:240px; }
-      .photo-mosaic .p-item:nth-child(1),
-      .photo-mosaic .p-item:nth-child(6),
-      .photo-mosaic .p-item:nth-child(9) { grid-column:span 1; grid-row:span 1; }
+    .event-tba {
+      font-family: 'Cinzel', serif;
+      font-size: 0.72rem; letter-spacing: 0.2em;
+      color: var(--gold); margin-bottom: 2rem;
     }
 
     /* ── BOOK ───────────────────────────────── */
@@ -491,6 +574,8 @@
     <li><a href="#about">About</a></li>
     <li><a href="#gallery">Gallery</a></li>
     <li><a href="#holy-land">Holy Land</a></li>
+    <li><a href="#for-sale">For Sale</a></li>
+    <li><a href="#events">Events</a></li>
     <li><a href="#book">The Book</a></li>
     <li class="cta-link"><a href="#visit">Book a Visit</a></li>
   </ul>
@@ -508,7 +593,7 @@
     <h1 class="hero-title">Christelation</h1>
     <p class="hero-tagline">An Immersive Journey Through Faith and Art</p>
     <div class="hero-actions">
-      <a href="#visit" class="btn btn-gold">&#128222; Book Your Visit</a>
+      <a href="tel:+17816081370" class="btn btn-gold">&#128222; Book Your Visit</a>
       <a href="#gallery" class="btn btn-outline">View the Collection</a>
     </div>
   </div>
@@ -559,7 +644,7 @@
   </div>
 </section>
 
-<!-- ══ GALLERY ════════════════════════════════════ -->
+<!-- ══ GALLERY (Carousel) ═════════════════════════ -->
 <section id="gallery">
   <div class="container">
     <div class="gallery-hd">
@@ -567,10 +652,16 @@
       <h2 class="heading reveal d1">The Collection</h2>
       <div class="rule rule--center reveal d1"></div>
       <p class="reveal d2" style="max-width:580px;margin:0 auto;color:var(--muted);">
-        Twenty-two original paintings — each a contemplation of scripture rendered in Rick's distinctive expressive style. Click any work to view it in full. Open the scripture to read the passage it depicts.
+        Twenty-two original paintings — each a contemplation of scripture rendered in Rick's distinctive expressive style. Swipe or tap to view each work. Open the scripture to read the passage it depicts.
       </p>
     </div>
-    <div class="masonry" id="artGrid"></div>
+    <div class="carousel reveal" id="galleryCarousel">
+      <div class="carousel-track" id="galleryTrack"></div>
+      <button class="carousel-arrow carousel-prev" id="galleryPrev" aria-label="Previous">&#8592;</button>
+      <button class="carousel-arrow carousel-next" id="galleryNext" aria-label="Next">&#8594;</button>
+    </div>
+    <div class="carousel-counter" id="galleryCounter"></div>
+    <div class="carousel-dots" id="galleryDots"></div>
   </div>
 </section>
 
@@ -591,7 +682,7 @@
   </div>
 </div>
 
-<!-- ══ HOLY LAND ══════════════════════════════════ -->
+<!-- ══ HOLY LAND (Carousel) ═══════════════════════ -->
 <section id="holy-land">
   <div class="container">
     <div class="hl-hd">
@@ -603,55 +694,78 @@
       Rick has walked the streets of Jerusalem, stood at the Western Wall, and visited the Garden Tomb. These photographs from that sacred pilgrimage are the heartbeat behind every brushstroke.
     </p>
 
-    <div class="photo-mosaic reveal">
-      <div class="p-item">
-        <img src="BookPhotosDPIweb/WailingWall.jpg" alt="The Western Wall, Jerusalem" loading="lazy">
-        <div class="p-caption">The Western (Wailing) Wall, Jerusalem</div>
+    <div class="carousel reveal" id="holyCarousel">
+      <div class="carousel-track" id="holyTrack"></div>
+      <button class="carousel-arrow carousel-prev" id="holyPrev" aria-label="Previous">&#8592;</button>
+      <button class="carousel-arrow carousel-next" id="holyNext" aria-label="Next">&#8594;</button>
+    </div>
+    <div class="carousel-counter" id="holyCounter"></div>
+    <div class="carousel-dots" id="holyDots"></div>
+  </div>
+</section>
+
+<!-- ══ FOR SALE ════════════════════════════════════ -->
+<section id="for-sale">
+  <div class="container">
+    <div class="sale-hd">
+      <span class="label reveal">Original Artwork</span>
+      <h2 class="heading reveal d1">For Sale</h2>
+      <div class="rule rule--center reveal d2"></div>
+      <p class="reveal d2" style="max-width:520px;margin:0 auto;color:var(--muted);">
+        Select original works by Richard Pierro will be available for purchase. Stay tuned.
+      </p>
+    </div>
+    <div class="sale-grid">
+      <div class="sale-card reveal">
+        <div class="sale-placeholder">
+          <span class="sale-placeholder-icon">&#127912;</span>
+          <span class="sale-placeholder-text">Coming Soon</span>
+        </div>
+        <div class="sale-card-body">
+          <h3>Artwork I</h3>
+          <p>Details coming soon</p>
+        </div>
       </div>
-      <div class="p-item">
-        <img src="BookPhotosDPIweb/GardenTomb.jpg" alt="The Garden Tomb" loading="lazy">
-        <div class="p-caption">The Garden Tomb</div>
+      <div class="sale-card reveal d1">
+        <div class="sale-placeholder">
+          <span class="sale-placeholder-icon">&#127912;</span>
+          <span class="sale-placeholder-text">Coming Soon</span>
+        </div>
+        <div class="sale-card-body">
+          <h3>Artwork II</h3>
+          <p>Details coming soon</p>
+        </div>
       </div>
-      <div class="p-item">
-        <img src="BookPhotosDPIweb/Dome.jpg" alt="Dome of the Rock" loading="lazy">
-        <div class="p-caption">Dome of the Rock</div>
+      <div class="sale-card reveal d2">
+        <div class="sale-placeholder">
+          <span class="sale-placeholder-icon">&#127912;</span>
+          <span class="sale-placeholder-text">Coming Soon</span>
+        </div>
+        <div class="sale-card-body">
+          <h3>Artwork III</h3>
+          <p>Details coming soon</p>
+        </div>
       </div>
-      <div class="p-item">
-        <img src="BookPhotosDPIweb/DamascusGate.jpg" alt="Damascus Gate" loading="lazy">
-        <div class="p-caption">Damascus Gate</div>
-      </div>
-      <div class="p-item">
-        <img src="BookPhotosDPIweb/Baptism.jpg" alt="Baptism" loading="lazy">
-        <div class="p-caption">Baptism at the River</div>
-      </div>
-      <div class="p-item">
-        <img src="BookPhotosDPIweb/GroupPhoto.jpg" alt="Pilgrimage Group" loading="lazy">
-        <div class="p-caption">Pilgrimage Group</div>
-      </div>
-      <div class="p-item">
-        <img src="BookPhotosDPIweb/TempleModel.jpg" alt="Temple Model" loading="lazy">
-        <div class="p-caption">Second Temple Model</div>
-      </div>
-      <div class="p-item">
-        <img src="BookPhotosDPIweb/Cave.jpg" alt="Ancient Cave" loading="lazy">
-        <div class="p-caption">Ancient Cave</div>
-      </div>
-      <div class="p-item">
-        <img src="BookPhotosDPIweb/StoneTablet.jpg" alt="Stone Tablet" loading="lazy">
-        <div class="p-caption">Ancient Stone Tablet</div>
-      </div>
-      <div class="p-item">
-        <img src="BookPhotosDPIweb/JesusBurial.jpg" alt="Anointing Stone" loading="lazy">
-        <div class="p-caption">The Anointing Stone</div>
-      </div>
-      <div class="p-item">
-        <img src="BookPhotosDPIweb/KingDavidInscription.jpg" alt="King David Inscription" loading="lazy">
-        <div class="p-caption">King David Inscription</div>
-      </div>
-      <div class="p-item">
-        <img src="BookPhotosDPIweb/ColumbariumCave.jpg" alt="Columbarium Cave" loading="lazy">
-        <div class="p-caption">Columbarium Cave</div>
-      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ EVENTS ═════════════════════════════════════ -->
+<section id="events">
+  <div class="container">
+    <div class="events-hd">
+      <span class="label reveal">What's Next</span>
+      <h2 class="heading reveal d1">Upcoming Events</h2>
+      <div class="rule rule--center reveal d2"></div>
+    </div>
+
+    <div class="event-card reveal">
+      <span class="event-badge">Summer Session</span>
+      <h3>Calling All Artists for<br><em>a Summer Session</em></h3>
+      <p>Come join us for an evening of painting. An inspiring gathering for artists of all levels in Rick's home gallery — surrounded by original works and the warmth of creative community.</p>
+      <p class="event-tba">Date &amp; details to be announced soon</p>
+      <a href="tel:+17816081370" class="btn btn-gold">&#128222;&nbsp; Reserve Early Bird Spots</a>
+      <p class="cta-sub" style="margin-top:1.2rem;">Call Rick at <a href="tel:+17816081370" style="color:var(--gold-lt);">(781) 608-1370</a></p>
     </div>
   </div>
 </section>
@@ -707,8 +821,7 @@
           <span class="d-icon">&#128222;</span>
           <div>
             <div class="d-label">Call to Book</div>
-            <!-- ⚠️ RICK: Replace (XXX) XXX-XXXX with your real phone number below -->
-            <div class="d-val"><a href="tel:+1XXXXXXXXXX">Rick Pierro &middot; (XXX) XXX-XXXX</a></div>
+            <div class="d-val"><a href="tel:+17816081370">Rick Pierro &middot; (781) 608-1370</a></div>
           </div>
         </div>
         <div class="detail reveal d2">
@@ -741,10 +854,9 @@
         <p class="cta-quote">"Come walk through the Word. Each painting tells a story — and every story is waiting to meet you."</p>
         <p class="cta-attribution">— Richard Pierro</p>
 
-        <!-- ⚠️ RICK: Replace (XXX) XXX-XXXX with your real phone number -->
-        <span class="phone-num"><a href="tel:+1XXXXXXXXXX">(XXX) XXX-XXXX</a></span>
+        <span class="phone-num"><a href="tel:+17816081370">(781) 608-1370</a></span>
 
-        <a href="tel:+1XXXXXXXXXX" class="btn btn-gold" style="font-size:0.88rem;padding:1.1rem 2.2rem;">
+        <a href="tel:+17816081370" class="btn btn-gold" style="font-size:0.88rem;padding:1.1rem 2.2rem;">
           &#128222;&nbsp; Call Rick to Book Your Visit
         </a>
 
@@ -766,6 +878,8 @@
       <li><a href="#about">About</a></li>
       <li><a href="#gallery">Gallery</a></li>
       <li><a href="#holy-land">Holy Land</a></li>
+      <li><a href="#for-sale">For Sale</a></li>
+      <li><a href="#events">Events</a></li>
       <li><a href="#book">The Book</a></li>
       <li><a href="#visit">Visit</a></li>
     </ul>
@@ -803,26 +917,95 @@ const paintings = [
   { num:'22', file:'1000%20pixel/22_Richard_Pierro_A_Stroll_Through_The_Bible_-2_1000_pixel.jpg', scr:'Scripture/ParableArtScripture22.pdf' },
 ];
 
-/* ── RENDER GALLERY ────────────────────────────── */
-const grid = document.getElementById('artGrid');
-paintings.forEach((p, i) => {
-  const el = document.createElement('div');
-  el.className = 'art-item reveal';
-  el.style.transitionDelay = (i % 5 * 0.08) + 's';
-  el.innerHTML = `
-    <img src="${p.file}" alt="Parable Art No.${p.num} by Richard Pierro" loading="lazy">
-    <div class="art-overlay">
+/* ── HOLY LAND DATA ────────────────────────────── */
+const holyLandPhotos = [
+  { file:'BookPhotosDPIweb/WailingWall.jpg',          cap:'The Western (Wailing) Wall, Jerusalem' },
+  { file:'BookPhotosDPIweb/GardenTomb.jpg',            cap:'The Garden Tomb' },
+  { file:'BookPhotosDPIweb/Dome.jpg',                  cap:'Dome of the Rock' },
+  { file:'BookPhotosDPIweb/DamascusGate.jpg',          cap:'Damascus Gate' },
+  { file:'BookPhotosDPIweb/Baptism.jpg',               cap:'Baptism at the River' },
+  { file:'BookPhotosDPIweb/GroupPhoto.jpg',             cap:'Pilgrimage Group' },
+  { file:'BookPhotosDPIweb/TempleModel.jpg',            cap:'Second Temple Model' },
+  { file:'BookPhotosDPIweb/Cave.jpg',                   cap:'Ancient Cave' },
+  { file:'BookPhotosDPIweb/StoneTablet.jpg',            cap:'Ancient Stone Tablet' },
+  { file:'BookPhotosDPIweb/JesusBurial.jpg',            cap:'The Anointing Stone' },
+  { file:'BookPhotosDPIweb/KingDavidInscription.jpg',   cap:'King David Inscription' },
+  { file:'BookPhotosDPIweb/ColumbariumCave.jpg',        cap:'Columbarium Cave' },
+];
+
+/* ── CAROUSEL ENGINE ──────────────────────────── */
+function initCarousel(trackId, prevId, nextId, counterId, dotsId, slides, renderSlide) {
+  const track = document.getElementById(trackId);
+  const dotsEl = document.getElementById(dotsId);
+  const counterEl = document.getElementById(counterId);
+  let idx = 0;
+
+  slides.forEach((s, i) => {
+    const slide = document.createElement('div');
+    slide.className = 'carousel-slide';
+    slide.innerHTML = renderSlide(s, i);
+    track.appendChild(slide);
+  });
+
+  // dots
+  slides.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+    dot.addEventListener('click', () => goTo(i));
+    dotsEl.appendChild(dot);
+  });
+
+  // store slide elements
+  const slideEls = Array.from(track.children);
+
+  function goTo(i) {
+    idx = i;
+    slideEls.forEach((el, j) => el.classList.toggle('active', j === idx));
+    counterEl.textContent = (idx + 1) + ' / ' + slides.length;
+    dotsEl.querySelectorAll('.carousel-dot').forEach((d, j) =>
+      d.classList.toggle('active', j === idx)
+    );
+  }
+
+  document.getElementById(prevId).addEventListener('click', () =>
+    goTo((idx - 1 + slides.length) % slides.length)
+  );
+  document.getElementById(nextId).addEventListener('click', () =>
+    goTo((idx + 1) % slides.length)
+  );
+
+  // touch swipe
+  let startX = 0, diff = 0;
+  const carousel = track.parentElement;
+  carousel.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, {passive:true});
+  carousel.addEventListener('touchmove', e => { diff = e.touches[0].clientX - startX; }, {passive:true});
+  carousel.addEventListener('touchend', () => {
+    if (Math.abs(diff) > 50) {
+      if (diff < 0) goTo((idx + 1) % slides.length);
+      else goTo((idx - 1 + slides.length) % slides.length);
+    }
+    diff = 0;
+  });
+
+  goTo(0);
+  return goTo;
+}
+
+/* ── GALLERY CAROUSEL ─────────────────────────── */
+const galleryGoTo = initCarousel(
+  'galleryTrack', 'galleryPrev', 'galleryNext', 'galleryCounter', 'galleryDots',
+  paintings,
+  (p, i) => `
+    <div class="carousel-img-wrap" style="cursor:pointer;" onclick="openLB(${i})">
+      <img src="${p.file}" alt="Parable Art No.${p.num} by Richard Pierro" loading="lazy">
+    </div>
+    <div class="gallery-slide-info">
       <div class="art-no">No. ${p.num}</div>
       <div class="art-name">Parable Art &middot; Richard Pierro</div>
-      <a class="scr-btn" href="${p.scr}" target="_blank" rel="noopener"
-         onclick="event.stopPropagation()">&#128214; Scripture</a>
-    </div>`;
-  el.addEventListener('click', e => {
-    if (e.target.closest('.scr-btn')) return;
-    openLB(i);
-  });
-  grid.appendChild(el);
-});
+      <a class="scr-btn" href="${p.scr}" target="_blank" rel="noopener">&#128214; Scripture</a>
+    </div>`
+);
 
 /* ── LIGHTBOX ──────────────────────────────────── */
 const lb     = document.getElementById('lightbox');
@@ -835,8 +1018,8 @@ function openLB(i) {
   cur = i;
   const p = paintings[i];
   lbImg.src = p.file;
-  lbImg.alt = `Parable Art No.${p.num} by Richard Pierro`;
-  lbNo.textContent = `No. ${p.num} of 22`;
+  lbImg.alt = 'Parable Art No.' + p.num + ' by Richard Pierro';
+  lbNo.textContent = 'No. ' + p.num + ' of 22';
   lbScr.href = p.scr;
   lb.classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -854,9 +1037,24 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft')   openLB((cur-1+paintings.length) % paintings.length);
 });
 
+/* ── HOLY LAND CAROUSEL ───────────────────────── */
+initCarousel(
+  'holyTrack', 'holyPrev', 'holyNext', 'holyCounter', 'holyDots',
+  holyLandPhotos,
+  (p) => `
+    <div class="carousel-img-wrap">
+      <img src="${p.file}" alt="${p.cap}" loading="lazy">
+    </div>
+    <div class="hl-slide-caption">${p.cap}</div>`
+);
+
 /* ── NAV ────────────────────────────────────────── */
 document.getElementById('navToggle').addEventListener('click', () =>
   document.getElementById('navLinks').classList.toggle('open')
+);
+// close mobile nav when a link is tapped
+document.querySelectorAll('#navLinks a').forEach(a =>
+  a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open'))
 );
 window.addEventListener('scroll', () => {
   document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 80);

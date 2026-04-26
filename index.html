@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Christelations — An Immersive Journey Through Faith and Art</title>
-  <meta name="description" content="Experience 'A Stroll Through the Bible' — an immersive art gallery by Richard Pierro at 20 Tidd St, Swampscott, MA. 22 original paintings paired with scripture in a deeply personal home gallery.">
+  <meta name="description" content="Experience 'A Stroll Through the Bible' — an immersive art gallery by Richard Pierro at 20 Tidd St, Swampscott, MA. 20 original paintings paired with scripture in a deeply personal home gallery.">
   <meta property="og:title" content="Christelations — An Immersive Journey Through Faith and Art">
-  <meta property="og:description" content="Step inside Richard Pierro's home gallery in Swampscott, MA. 22 original paintings, each paired with scripture. Book your visit today.">
+  <meta property="og:description" content="Step inside Richard Pierro's home gallery in Swampscott, MA. 20 original paintings, each paired with scripture. Book your visit today.">
   <meta property="og:type" content="website">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -180,9 +180,17 @@
       margin-bottom: 3rem;
       opacity: 0; animation: rise 1s 1s forwards;
     }
+    .hero-intro {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(0.95rem, 2vw, 1.15rem);
+      color: var(--cream); opacity: 0.82;
+      max-width: 640px; margin: 0 auto 2.4rem;
+      line-height: 1.75;
+      opacity: 0; animation: rise 1s 1.15s forwards;
+    }
     .hero-actions {
       display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
-      opacity: 0; animation: rise 1s 1.3s forwards;
+      opacity: 0; animation: rise 1s 1.4s forwards;
     }
     .hero-scroll {
       position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
@@ -198,6 +206,42 @@
     }
     @keyframes pulse { 0%,100%{opacity:0.25;transform:scaleY(0.7)} 50%{opacity:1;transform:scaleY(1)} }
     @keyframes rise { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+
+    /* ── VIDEO EXPERIENCE ───────────────────── */
+    #experience { background: var(--bg); position: relative; }
+    #experience::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:90px;
+      background: linear-gradient(var(--bg), transparent);
+    }
+    .experience-hd { text-align: center; margin-bottom: 3rem; }
+    .video-wrapper {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border-radius: var(--radius);
+      border: 1px solid rgba(200,145,58,0.18);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .video-wrapper iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border: none;
+    }
+    .video-caption {
+      max-width: 700px;
+      margin: 2.5rem auto 0;
+      text-align: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.15rem;
+      color: var(--text);
+      line-height: 1.8;
+    }
+    .video-caption p { margin-bottom: 1rem; }
 
     /* ── ABOUT ──────────────────────────────── */
     #about { background: var(--surface); position: relative; }
@@ -386,82 +430,6 @@
       font-size: 1.05rem; color: var(--cream);
     }
 
-    /* ── FOR SALE ───────────────────────────── */
-    #for-sale { background: var(--bg); }
-    .sale-hd { text-align: center; margin-bottom: 4rem; }
-    .sale-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: 1.8rem;
-    }
-    .sale-card {
-      background: var(--surface2);
-      border: 1px solid rgba(200,145,58,0.14);
-      border-radius: var(--radius);
-      overflow: hidden; text-align: center;
-    }
-    .sale-placeholder {
-      aspect-ratio: 3/4;
-      background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%);
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 1rem;
-    }
-    .sale-placeholder-icon {
-      font-size: 2.8rem; opacity: 0.4;
-    }
-    .sale-placeholder-text {
-      font-family: 'Cinzel', serif;
-      font-size: 0.72rem; letter-spacing: 0.22em;
-      text-transform: uppercase; color: var(--gold);
-    }
-    .sale-card-body { padding: 1.4rem; }
-    .sale-card-body h3 {
-      font-family: 'Cormorant Garamond', serif;
-      font-weight: 300; font-size: 1.3rem;
-      color: var(--cream); margin-bottom: 0.4rem;
-    }
-    .sale-card-body p {
-      font-size: 0.88rem; color: var(--muted);
-    }
-
-    @media (max-width: 700px) {
-      .sale-grid { grid-template-columns: 1fr; max-width: 360px; margin: 0 auto; }
-    }
-
-    /* ── EVENTS ─────────────────────────────── */
-    #events { background: var(--surface); }
-    .events-hd { text-align: center; margin-bottom: 4rem; }
-    .event-card {
-      max-width: 680px; margin: 0 auto;
-      background: var(--surface2);
-      border: 1px solid rgba(200,145,58,0.18);
-      border-radius: var(--radius);
-      padding: 3rem; text-align: center;
-    }
-    .event-badge {
-      display: inline-block;
-      font-family: 'Cinzel', serif;
-      font-size: 0.62rem; letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--bg); background: var(--gold);
-      padding: 0.35rem 1.1rem; border-radius: var(--radius);
-      margin-bottom: 1.4rem;
-    }
-    .event-card h3 {
-      font-family: 'Cormorant Garamond', serif;
-      font-weight: 300; font-size: clamp(1.6rem, 3.5vw, 2.2rem);
-      color: var(--cream); line-height: 1.25;
-      margin-bottom: 1rem;
-    }
-    .event-card p {
-      font-size: 1.04rem; margin-bottom: 1.2rem;
-    }
-    .event-tba {
-      font-family: 'Cinzel', serif;
-      font-size: 0.72rem; letter-spacing: 0.2em;
-      color: var(--gold); margin-bottom: 2rem;
-    }
-
     /* ── BOOK ───────────────────────────────── */
     #book { background: var(--bg); position:relative; overflow:hidden; }
     #book::before {
@@ -571,11 +539,10 @@
 <nav id="nav">
   <a href="#hero" class="nav-brand">Christelations</a>
   <ul class="nav-links" id="navLinks">
+    <li><a href="#experience">The Experience</a></li>
     <li><a href="#about">About</a></li>
     <li><a href="#gallery">Gallery</a></li>
     <li><a href="#holy-land">Holy Land</a></li>
-    <li><a href="#for-sale">For Sale</a></li>
-    <li><a href="#events">Events</a></li>
     <li><a href="#book">The Book</a></li>
     <li class="cta-link"><a href="#visit">Book a Visit</a></li>
   </ul>
@@ -592,6 +559,7 @@
     <span class="hero-eyebrow">Richard Pierro · Swampscott, MA</span>
     <h1 class="hero-title">Christelations</h1>
     <p class="hero-tagline">An Immersive Journey Through Faith and Art</p>
+    <p class="hero-intro">Christelations is born from a singular artistic vision: the blending of biblical scripture and expressive art into what Richard Pierro calls Parable Art. These paintings are abstract verticals — each one depicting a well-known story or moment from the Old Testament, the Torah, or the New Testament — rendered in vivid color, texture, and emotion.</p>
     <div class="hero-actions">
       <a href="tel:+17816081370" class="btn btn-gold">&#128222; Book Your Visit</a>
       <a href="#gallery" class="btn btn-outline">View the Collection</a>
@@ -603,28 +571,51 @@
   </div>
 </section>
 
+<!-- ══ EXPERIENCE (Video) ════════════════════════ -->
+<section id="experience">
+  <div class="container">
+    <div class="experience-hd">
+      <span class="label reveal">See It Come Alive</span>
+      <h2 class="heading reveal d1">Experience the<br><em>Gallery</em></h2>
+      <div class="rule rule--center reveal d2"></div>
+    </div>
+    <div class="video-wrapper reveal">
+      <iframe
+        src="https://www.youtube.com/embed/_PvW4dbEAeM"
+        title="Christelations — A Stroll Through the Bible | Richard Pierro's Art Gallery"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen>
+      </iframe>
+    </div>
+    <div class="video-caption reveal d1">
+      <p>Step inside Richard Pierro's home gallery in Swampscott, Massachusetts and hear the story behind <em>A Stroll Through the Bible</em> — twenty original paintings that bring scripture to life through expressive, abstract art.</p>
+      <p>This is an experience unlike any museum. It is intimate, personal, and deeply moving.</p>
+    </div>
+  </div>
+</section>
+
 <!-- ══ ABOUT ══════════════════════════════════════ -->
 <section id="about">
   <div class="container">
     <div class="about-grid">
 
       <div class="about-img-wrap reveal">
-        <img src="1000%20pixel/12_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg"
-             alt="Original painting by Richard Pierro">
+        <img src="1000%20pixel/04_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg"
+             alt="Fall of Adam — original painting by Richard Pierro">
       </div>
 
       <div class="about-copy">
         <span class="label reveal">The Experience</span>
         <h2 class="heading reveal d1">A Stroll Through<br><em>the Bible</em></h2>
         <div class="rule reveal d2"></div>
-        <p class="reveal d2">Step inside an extraordinary home gallery in Swampscott, Massachusetts — a sacred space where 22 original paintings by artist Richard Pierro transform biblical parables and scripture into vivid, expressive art.</p>
-        <p class="reveal d2">Each painting is paired with its scripture reference, creating a meditative walk through the Word. Rick has spent years crafting works that speak to the heart — abstract and alive, yet deeply contemplative.</p>
-        <p class="reveal d3">This is not a museum. It is an invitation to experience faith through beauty — and to carry something of it with you when you leave.</p>
+        <p class="reveal d2">Over more than forty years of devotion to his craft and his faith, Richard Pierro has journeyed through the ancient landscapes of the Holy Land, walked the streets of Jerusalem, and stood at the very sites where scripture came to life. That lived experience — layered with decades of spiritual reflection — is what breathes soul into every brushstroke.</p>
+        <p class="reveal d3"><em>A Stroll Through the Bible</em> is the culmination of that journey: a collection of twenty original paintings, each paired with its scripture reference, installed in Rick's home gallery in Swampscott, Massachusetts. The sentiment of Christelations is woven through every work — a sacred harmony of faith, art, and the universal human longing to encounter the Word not just as text, but as something you can <em>see</em>, <em>feel</em>, and carry with you.</p>
+        <p class="reveal d3">This is not a museum. It is an invitation — to walk through the Word and be moved by it.</p>
 
         <div class="cards reveal d3">
           <div class="card">
             <span class="card-icon">&#127912;</span>
-            <h3>22 Original Works</h3>
+            <h3>20 Original Works</h3>
             <p>Each paired with scripture</p>
           </div>
           <div class="card">
@@ -634,8 +625,8 @@
           </div>
           <div class="card">
             <span class="card-icon">&#10013;&#65039;</span>
-            <h3>Open to All</h3>
-            <p>Faith &amp; community welcome</p>
+            <h3>40+ Years of Faith</h3>
+            <p>Art rooted in devotion</p>
           </div>
         </div>
       </div>
@@ -652,7 +643,7 @@
       <h2 class="heading reveal d1">The Collection</h2>
       <div class="rule rule--center reveal d1"></div>
       <p class="reveal d2" style="max-width:580px;margin:0 auto;color:var(--muted);">
-        Twenty-two original paintings — each a contemplation of scripture rendered in Rick's distinctive expressive style. Swipe or tap to view each work. Open the scripture to read the passage it depicts.
+        Twenty original paintings — each a contemplation of scripture rendered in Rick's distinctive Parable Art style. Swipe or tap to view each work. Open the scripture to read the passage it depicts.
       </p>
     </div>
     <div class="carousel reveal" id="galleryCarousel">
@@ -704,90 +695,24 @@
   </div>
 </section>
 
-<!-- ══ FOR SALE ════════════════════════════════════ -->
-<section id="for-sale">
-  <div class="container">
-    <div class="sale-hd">
-      <span class="label reveal">Original Artwork</span>
-      <h2 class="heading reveal d1">For Sale</h2>
-      <div class="rule rule--center reveal d2"></div>
-      <p class="reveal d2" style="max-width:520px;margin:0 auto;color:var(--muted);">
-        Select original works by Richard Pierro will be available for purchase. Stay tuned.
-      </p>
-    </div>
-    <div class="sale-grid">
-      <div class="sale-card reveal">
-        <div class="sale-placeholder">
-          <span class="sale-placeholder-icon">&#127912;</span>
-          <span class="sale-placeholder-text">Coming Soon</span>
-        </div>
-        <div class="sale-card-body">
-          <h3>Artwork I</h3>
-          <p>Details coming soon</p>
-        </div>
-      </div>
-      <div class="sale-card reveal d1">
-        <div class="sale-placeholder">
-          <span class="sale-placeholder-icon">&#127912;</span>
-          <span class="sale-placeholder-text">Coming Soon</span>
-        </div>
-        <div class="sale-card-body">
-          <h3>Artwork II</h3>
-          <p>Details coming soon</p>
-        </div>
-      </div>
-      <div class="sale-card reveal d2">
-        <div class="sale-placeholder">
-          <span class="sale-placeholder-icon">&#127912;</span>
-          <span class="sale-placeholder-text">Coming Soon</span>
-        </div>
-        <div class="sale-card-body">
-          <h3>Artwork III</h3>
-          <p>Details coming soon</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══ EVENTS ═════════════════════════════════════ -->
-<section id="events">
-  <div class="container">
-    <div class="events-hd">
-      <span class="label reveal">What's Next</span>
-      <h2 class="heading reveal d1">Upcoming Events</h2>
-      <div class="rule rule--center reveal d2"></div>
-    </div>
-
-    <div class="event-card reveal">
-      <span class="event-badge">Summer Session</span>
-      <h3>Calling All Artists for<br><em>a Summer Session</em></h3>
-      <p>Come join us for an evening of painting. An inspiring gathering for artists of all levels in Rick's home gallery — surrounded by original works and the warmth of creative community.</p>
-      <p class="event-tba">Date &amp; details to be announced soon</p>
-      <a href="tel:+17816081370" class="btn btn-gold">&#128222;&nbsp; Reserve Early Bird Spots</a>
-      <p class="cta-sub" style="margin-top:1.2rem;">Call Rick at <a href="tel:+17816081370" style="color:var(--gold-lt);">(781) 608-1370</a></p>
-    </div>
-  </div>
-</section>
-
 <!-- ══ BOOK ═══════════════════════════════════════ -->
 <section id="book">
   <div class="container">
     <div class="book-grid">
 
       <div class="book-art reveal">
-        <img src="1000%20pixel/09_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg"
-             alt="Parable Art by Richard Pierro — companion to Bathing in the Warmth of God">
+        <img src="BibleSeries%231.jpeg"
+             alt="A Stroll Through the Bible — by Richard Pierro">
       </div>
 
       <div class="book-copy">
         <span class="label reveal">By Richard Pierro</span>
-        <h2 class="heading reveal d1">Bathing in the<br><em>Warmth of God</em></h2>
+        <h2 class="heading reveal d1">A Stroll Through<br><em>the Bible</em></h2>
         <div class="rule reveal d2"></div>
-        <p class="reveal d2">Alongside his paintings, Rick has written <em>Bathing in the Warmth of God</em> — a deeply personal meditation on faith, scripture, and the spiritual life that inspired the entire collection.</p>
-        <p class="reveal d3">This companion text illuminates the heart behind the brushstrokes. Each reflection deepens the experience of the gallery, making it the perfect companion to your stroll through the Word.</p>
+        <p class="reveal d2">Alongside his paintings, Rick has assembled <em>A Stroll Through the Bible</em> — a visual companion that brings together the full collection of Parable Art with its accompanying scripture. This book is an extension of the gallery itself: a way to carry the experience home.</p>
+        <p class="reveal d3">Each page pairs an original painting with the biblical passage that inspired it, inviting the reader into the same meditative walk through the Word that visitors discover in Rick's home gallery in Swampscott, Massachusetts.</p>
         <div class="reveal d3" style="margin-top:2rem;display:flex;gap:1rem;flex-wrap:wrap;">
-          <a href="BathingInTheWarmGod/Bathing%20in%20the%20Warmth%20of%20God.pdf"
+          <a href="AStrollThroughtheBiblePhotos.pdf"
              target="_blank" rel="noopener" class="btn btn-gold">&#128214; Read a Preview</a>
         </div>
       </div>
@@ -875,11 +800,10 @@
     <div class="foot-logo">Christelations</div>
     <div class="foot-tag">An Immersive Journey Through Faith and Art</div>
     <ul class="foot-nav">
+      <li><a href="#experience">The Experience</a></li>
       <li><a href="#about">About</a></li>
       <li><a href="#gallery">Gallery</a></li>
       <li><a href="#holy-land">Holy Land</a></li>
-      <li><a href="#for-sale">For Sale</a></li>
-      <li><a href="#events">Events</a></li>
       <li><a href="#book">The Book</a></li>
       <li><a href="#visit">Visit</a></li>
     </ul>
@@ -892,29 +816,29 @@
 <!-- ══ SCRIPTS ════════════════════════════════════ -->
 <script>
 /* ── PAINTINGS DATA ────────────────────────────── */
+/* Order follows file naming: 01, 02, 02a, 03–20. Paintings 21–26 excluded. */
 const paintings = [
-  { num:'01', file:'1000%20pixel/01_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',  scr:'Scripture/ParableArtScripture1.pdf'  },
-  { num:'02', file:'1000%20pixel/02a_Richard_Pierro_A_Stroll_Through_The_Bible_-2_1000_pixel.jpg', scr:'Scripture/ParableArtScripture2A.pdf' },
-  { num:'03', file:'1000%20pixel/03_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',  scr:'Scripture/ParableArtScripture3.pdf'  },
-  { num:'04', file:'1000%20pixel/04_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',  scr:'Scripture/ParableArtScripture4.pdf'  },
-  { num:'05', file:'1000%20pixel/05_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',  scr:'Scripture/ParableArtScripture5.pdf'  },
-  { num:'06', file:'1000%20pixel/06_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',  scr:'Scripture/ParableArtScripture6.pdf'  },
-  { num:'07', file:'1000%20pixel/07_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',  scr:'Scripture/ParableArtScripture7.pdf'  },
-  { num:'08', file:'1000%20pixel/08_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',  scr:'Scripture/ParableArtScripture8.pdf'  },
-  { num:'09', file:'1000%20pixel/09_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',  scr:'Scripture/ParableArtScripture9.pdf'  },
-  { num:'10', file:'1000%20pixel/10_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',  scr:'Scripture/ParableArtScripture10.pdf' },
-  { num:'11', file:'1000%20pixel/11_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',  scr:'Scripture/ParableArtScripture11.pdf' },
-  { num:'12', file:'1000%20pixel/12_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',  scr:'Scripture/ParableArtScripture12.pdf' },
-  { num:'13', file:'1000%20pixel/13_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',  scr:'Scripture/ParableArtScripture13.pdf' },
-  { num:'14', file:'1000%20pixel/14_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',  scr:'Scripture/ParableArtScripture14.pdf' },
-  { num:'15', file:'1000%20pixel/15_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',  scr:'Scripture/ParableArtScripture15.pdf' },
-  { num:'16', file:'1000%20pixel/16_Pierro_Richard_18x24_print_file_1000_pixel.jpg',              scr:'Scripture/ParableArtScripture16.pdf' },
-  { num:'17', file:'1000%20pixel/17_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',  scr:'Scripture/ParableArtScripture17.pdf' },
-  { num:'18', file:'1000%20pixel/18_Richard_Pierro_A_Stroll_Through_The_Bible_-2_1000_pixel.jpg', scr:'Scripture/ParableArtScripture18.pdf' },
-  { num:'19', file:'1000%20pixel/19_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',  scr:'Scripture/ParableArtScripture19.pdf' },
-  { num:'20', file:'1000%20pixel/20_Richard_Pierro_A_Stroll_Through_The_Bible_-2_1000_pixel.jpg', scr:'Scripture/ParableArtScripture20.pdf' },
-  { num:'21', file:'1000%20pixel/21_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',  scr:'Scripture/ParableArtScripture21.pdf' },
-  { num:'22', file:'1000%20pixel/22_Richard_Pierro_A_Stroll_Through_The_Bible_-2_1000_pixel.jpg', scr:'Scripture/ParableArtScripture22.pdf' },
+  { num:'01',  file:'1000%20pixel/01_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture1.pdf'  },
+  { num:'02',  file:'1000%20pixel/02a_Richard_Pierro_A_Stroll_Through_The_Bible_-2_1000_pixel.jpg', scr:'Scripture/ParableArtScripture2.pdf'  },
+  { num:'02a', file:'1000%20pixel/02a_Richard_Pierro_A_Stroll_Through_The_Bible_-2_1000_pixel.jpg', scr:'Scripture/ParableArtScripture2A.pdf' },
+  { num:'03',  file:'1000%20pixel/03_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture3.pdf'  },
+  { num:'04',  file:'1000%20pixel/04_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture4.pdf'  },
+  { num:'05',  file:'1000%20pixel/05_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture5.pdf'  },
+  { num:'06',  file:'1000%20pixel/06_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture6.pdf'  },
+  { num:'07',  file:'1000%20pixel/07_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture7.pdf'  },
+  { num:'08',  file:'1000%20pixel/08_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture8.pdf'  },
+  { num:'09',  file:'1000%20pixel/09_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture9.pdf'  },
+  { num:'10',  file:'1000%20pixel/10_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture10.pdf' },
+  { num:'11',  file:'1000%20pixel/11_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture11.pdf' },
+  { num:'12',  file:'1000%20pixel/12_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture12.pdf' },
+  { num:'13',  file:'1000%20pixel/13_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture13.pdf' },
+  { num:'14',  file:'1000%20pixel/14_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture14.pdf' },
+  { num:'15',  file:'1000%20pixel/15_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture15.pdf' },
+  { num:'16',  file:'1000%20pixel/16_Pierro_Richard_18x24_print_file_1000_pixel.jpg',               scr:'Scripture/ParableArtScripture16.pdf' },
+  { num:'17',  file:'1000%20pixel/17_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture17.pdf' },
+  { num:'18',  file:'1000%20pixel/18_Richard_Pierro_A_Stroll_Through_The_Bible_-2_1000_pixel.jpg',  scr:'Scripture/ParableArtScripture18.pdf' },
+  { num:'19',  file:'1000%20pixel/19_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture19.pdf' },
+  { num:'20',  file:'1000%20pixel/20_Richard_Pierro_A_Stroll_Through_The_Bible_-2_1000_pixel.jpg',  scr:'Scripture/ParableArtScripture20.pdf' },
 ];
 
 /* ── HOLY LAND DATA ────────────────────────────── */
@@ -1019,7 +943,7 @@ function openLB(i) {
   const p = paintings[i];
   lbImg.src = p.file;
   lbImg.alt = 'Parable Art No.' + p.num + ' by Richard Pierro';
-  lbNo.textContent = 'No. ' + p.num + ' of 22';
+  lbNo.textContent = 'No. ' + p.num + ' of 20';
   lbScr.href = p.scr;
   lb.classList.add('open');
   document.body.style.overflow = 'hidden';

@@ -231,10 +231,13 @@
       justify-content: center;
       border-radius: var(--radius);
       overflow: hidden;
+      /* Fixed height prevents layout shift between slides */
+      height: min(65vh, 560px);
+      width: 100%;
     }
     .carousel-slide img {
       max-width: min(560px, 90vw);
-      max-height: 70vh;
+      max-height: 100%;
       object-fit: contain;
       border-radius: var(--radius);
       filter: saturate(0.88);
@@ -243,7 +246,7 @@
       position: absolute; top: 50%; transform: translateY(-50%);
       background: rgba(200,145,58,0.15); border: 1px solid rgba(200,145,58,0.25);
       color: var(--gold-lt); font-size: 1.4rem;
-      width: 44px; height: 44px;
+      width: 48px; height: 48px;
       border-radius: 50%; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       transition: all 0.2s; z-index: 5;
@@ -268,9 +271,10 @@
     }
 
     @media (max-width: 540px) {
-      .carousel-arrow { width: 36px; height: 36px; font-size: 1.1rem; }
-      .carousel-prev { left: 0.4rem; }
-      .carousel-next { right: 0.4rem; }
+      .carousel-arrow { width: 44px; height: 44px; font-size: 1.2rem; }
+      .carousel-prev { left: 0.3rem; }
+      .carousel-next { right: 0.3rem; }
+      .carousel-img-wrap { height: min(55vh, 420px); }
     }
 
     /* ── GALLERY / COLLECTION ───────────────── */
@@ -278,32 +282,99 @@
     .gallery-hd { text-align:center; margin-bottom: 2rem; }
 
     .gallery-slide-info {
-      margin-top: 0.6rem; text-align: center;
+      margin-top: 0.8rem; text-align: center;
     }
     .gallery-slide-info .art-no {
-      font-family:'Cinzel',serif; font-size:0.66rem;
-      letter-spacing:0.32em; color:var(--gold); margin-bottom:0.25rem;
+      font-family:'Cinzel',serif; font-size:0.68rem;
+      letter-spacing:0.32em; color:var(--gold); margin-bottom:0.2rem;
     }
     .gallery-slide-info .art-name {
-      font-family:'Cormorant Garamond',serif; font-size:1.05rem;
-      color:var(--cream); margin-bottom:0.7rem;
+      font-family:'Cormorant Garamond',serif; font-size:1.2rem;
+      color:var(--cream); margin-bottom:0.7rem; font-weight: 400;
     }
     .gallery-slide-info .scr-btn {
-      display:inline-flex; align-items:center; gap:0.35rem;
-      font-family:'Cinzel',serif; font-size:0.72rem; letter-spacing:0.1em;
-      text-transform:uppercase; color:var(--gold-lt);
-      border:1px solid rgba(200,145,58,0.4);
-      padding:0.38rem 0.8rem; border-radius: var(--radius);
+      display:inline-flex; align-items:center; gap:0.4rem;
+      font-family:'Cinzel',serif; font-size:0.75rem; letter-spacing:0.1em;
+      text-transform:uppercase;
+      color: var(--bg);
+      background: var(--gold);
+      border: 2px solid var(--gold);
+      padding:0.55rem 1.2rem; border-radius: var(--radius);
       transition: all 0.2s;
+      font-weight: 600;
+      cursor: pointer;
     }
-    .gallery-slide-info .scr-btn:hover { background:var(--gold); color:var(--bg); border-color:var(--gold); }
+    .gallery-slide-info .scr-btn:hover {
+      background: var(--gold-lt);
+      border-color: var(--gold-lt);
+      color: var(--bg);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(200,145,58,0.3);
+    }
 
-    /* ── LIGHTBOX ───────────────────────────── */
+    /* ── PDF VIEWER POPUP ──────────────────── */
+    #pdfViewer {
+      display: none;
+      position: fixed; inset: 0; z-index: 600;
+      background: rgba(6,5,14,0.97);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+    #pdfViewer.open { display: flex; }
+    .pdf-header {
+      position: absolute; top: 0; left: 0; right: 0;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.8rem 1.2rem;
+      background: rgba(6,5,14,0.95);
+      border-bottom: 1px solid rgba(200,145,58,0.2);
+      z-index: 10;
+    }
+    .pdf-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      text-transform: uppercase;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+      margin-right: 1rem;
+    }
+    #pdfClose {
+      background: var(--gold);
+      color: var(--bg);
+      border: none;
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.6rem 1.4rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.2s;
+      flex-shrink: 0;
+      min-width: 80px;
+      text-align: center;
+    }
+    #pdfClose:hover { background: var(--gold-lt); }
+    #pdfFrame {
+      width: 100%;
+      height: 100%;
+      border: none;
+      margin-top: 52px;
+    }
+
+    /* ── LIGHTBOX (painting zoom) ──────────── */
     #lightbox {
       display:none; position:fixed; inset:0; z-index:500;
       background:rgba(6,5,14,0.96);
       backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
-      align-items:center; justify-content:center; padding:2rem;
+      align-items:center; justify-content:center; padding:1rem;
     }
     #lightbox.open { display:flex; }
     .lb-inner {
@@ -311,26 +382,51 @@
       display:flex; flex-direction:column; align-items:center;
     }
     #lb-img {
-      max-height:72vh; max-width:100%; object-fit:contain;
+      max-height:60vh; max-width:100%; object-fit:contain;
       border-radius: var(--radius);
       box-shadow: 0 0 100px rgba(200,145,58,0.12);
+      cursor: pointer;
     }
-    .lb-cap { margin-top:1.4rem; text-align:center; }
-    .lb-no { font-family:'Cinzel',serif; font-size:0.66rem; letter-spacing:0.35em; color:var(--gold); }
-    .lb-name { font-family:'Cormorant Garamond',serif; font-size:1.4rem; color:var(--cream); margin:0.3rem 0 0.8rem; }
+    .lb-cap { margin-top:1rem; text-align:center; }
+    .lb-no { font-family:'Cinzel',serif; font-size:0.68rem; letter-spacing:0.35em; color:var(--gold); }
+    .lb-name { font-family:'Cormorant Garamond',serif; font-size:1.35rem; color:var(--cream); margin:0.3rem 0 0.5rem; }
+    .lb-scr-btn {
+      display:inline-flex; align-items:center; gap:0.4rem;
+      font-family:'Cinzel',serif; font-size:0.78rem; letter-spacing:0.1em;
+      text-transform:uppercase;
+      color: var(--bg);
+      background: var(--gold);
+      border: 2px solid var(--gold);
+      padding:0.6rem 1.4rem; border-radius: var(--radius);
+      transition: all 0.2s;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .lb-scr-btn:hover {
+      background: var(--gold-lt);
+      border-color: var(--gold-lt);
+      color: var(--bg);
+    }
     #lb-close {
-      position:absolute; top:-3rem; right:0;
-      background:none; border:none; color:var(--muted);
-      font-size:1.6rem; cursor:pointer; transition:color 0.2s; line-height:1;
+      position:absolute; top:-2.5rem; right:0;
+      background: var(--gold);
+      border: none;
+      color: var(--bg);
+      font-family: 'Cinzel', serif;
+      font-size:0.75rem; font-weight: 700;
+      letter-spacing: 0.15em;
+      padding: 0.5rem 1.2rem;
+      border-radius: var(--radius);
+      cursor:pointer; transition:all 0.2s;
     }
-    #lb-close:hover { color:var(--cream); }
+    #lb-close:hover { background: var(--gold-lt); }
     .lb-nav {
-      display:flex; gap:1rem; margin-top:1.2rem;
+      display:flex; gap:1rem; margin-top:1rem;
     }
     .lb-arrow {
-      background:rgba(200,145,58,0.12); border:1px solid rgba(200,145,58,0.2);
+      background:rgba(200,145,58,0.15); border:1px solid rgba(200,145,58,0.3);
       color:var(--gold-lt); font-size:1.2rem;
-      padding:0.5rem 1rem; border-radius: var(--radius);
+      padding:0.6rem 1.2rem; border-radius: var(--radius);
       cursor:pointer; transition:all 0.2s;
     }
     .lb-arrow:hover { background:var(--gold); color:var(--bg); }
@@ -535,6 +631,87 @@
     .d1 { transition-delay:0.12s; }
     .d2 { transition-delay:0.24s; }
     .d3 { transition-delay:0.36s; }
+
+    /* ══ MOBILE ACCESSIBILITY ══════════════════ */
+    @media (max-width: 600px) {
+      body { font-size: 19px; }
+      section { padding: 70px 0; }
+
+      .hero-intro { font-size: 1.1rem; }
+
+      .gallery-slide-info .art-no { font-size: 0.72rem; }
+      .gallery-slide-info .art-name { font-size: 1.25rem; margin-bottom: 0.9rem; }
+      .gallery-slide-info .scr-btn {
+        font-size: 0.82rem;
+        padding: 0.7rem 1.6rem;
+        min-height: 48px;
+      }
+
+      .lb-scr-btn {
+        font-size: 0.82rem;
+        padding: 0.7rem 1.6rem;
+        min-height: 48px;
+      }
+      #lb-close {
+        top: -2rem;
+        font-size: 0.8rem;
+        padding: 0.55rem 1rem;
+        min-height: 44px;
+      }
+      .lb-arrow {
+        padding: 0.7rem 1.4rem;
+        font-size: 1.3rem;
+        min-height: 48px;
+      }
+
+      .pdf-header { padding: 0.6rem 0.8rem; }
+      #pdfClose {
+        font-size: 0.85rem;
+        padding: 0.65rem 1.4rem;
+        min-height: 48px;
+      }
+
+      .btn {
+        font-size: 0.85rem;
+        padding: 1rem 2rem;
+        min-height: 48px;
+      }
+
+      .detail { gap: 0.8rem; }
+      .d-val { font-size: 1.1rem; }
+      .d-label { font-size: 0.72rem; }
+
+      .carousel-arrow {
+        width: 48px; height: 48px;
+        font-size: 1.3rem;
+      }
+
+      .foot-nav { gap: 1.2rem; }
+      .foot-nav a { font-size: 0.85rem; min-height: 44px; display: flex; align-items: center; }
+    }
+
+    /* ── LANDSCAPE MOBILE ──────────────────── */
+    @media (max-height: 500px) and (orientation: landscape) {
+      section { padding: 40px 0; }
+      .carousel-img-wrap { height: min(50vh, 300px); }
+      .hero-title { font-size: clamp(2.5rem, 10vw, 5rem); }
+      .hero-tagline { margin-bottom: 1.5rem; }
+      .hero-intro { margin-bottom: 1.2rem; }
+      .hero-scroll { display: none; }
+
+      #lb-img { max-height: 45vh; }
+      #lb-close {
+        position: fixed; top: 0.5rem; right: 0.5rem;
+        z-index: 510;
+      }
+      .lb-cap { margin-top: 0.5rem; }
+      .lb-nav { margin-top: 0.5rem; }
+
+      .pdf-header {
+        padding: 0.5rem 0.8rem;
+      }
+      #pdfFrame { margin-top: 42px; }
+    }
   </style>
 </head>
 <body>
@@ -560,10 +737,10 @@
   <div class="hero-bg"></div>
   <div class="hero-vignette"></div>
   <div class="hero-body">
-    <span class="hero-eyebrow">Richard Pierro · Swampscott, MA</span>
+    <span class="hero-eyebrow">Welcome To</span>
     <h1 class="hero-title">Christelations</h1>
     <p class="hero-tagline">An Immersive Journey Through Faith and Art</p>
-    <p class="hero-intro">Twenty original Parable Art paintings by Richard Pierro, each depicting a story from scripture, rendered in vivid color, texture, and emotion.</p>
+    <p class="hero-intro">Original Parable Art paintings by Richard Pierro, each depicting a story from scripture, rendered in vivid color, texture, and emotion.</p>
     <div class="hero-actions">
       <a href="#gallery" class="btn btn-gold">View the Collection</a>
     </div>
@@ -582,7 +759,7 @@
       <h2 class="heading reveal d1">The Collection</h2>
       <div class="rule rule--center reveal d1"></div>
       <p class="reveal d2" style="max-width:580px;margin:0 auto;color:var(--muted);font-size:1.05rem;">
-        Twenty original paintings, each a contemplation of scripture in Rick's distinctive Parable Art style. Tap any work to enlarge it, or open the scripture it depicts.
+        Original paintings, each a contemplation of scripture in a distinctive Parable Art style. Tap any painting to open the scripture it depicts.
       </p>
     </div>
     <div class="carousel reveal" id="galleryCarousel">
@@ -595,15 +772,24 @@
   </div>
 </section>
 
-<!-- LIGHTBOX -->
+<!-- ══ PDF VIEWER POPUP ══════════════════════════ -->
+<div id="pdfViewer" role="dialog" aria-modal="true" aria-label="Scripture viewer">
+  <div class="pdf-header">
+    <span class="pdf-title" id="pdfTitle"></span>
+    <button id="pdfClose">Close</button>
+  </div>
+  <iframe id="pdfFrame" src="" title="Scripture PDF"></iframe>
+</div>
+
+<!-- ══ LIGHTBOX (painting zoom) ═════════════════ -->
 <div id="lightbox" role="dialog" aria-modal="true" aria-label="Artwork viewer">
   <div class="lb-inner">
-    <button id="lb-close" aria-label="Close viewer">&#10005;</button>
+    <button id="lb-close" aria-label="Close viewer">Close</button>
     <img id="lb-img" src="" alt="">
     <div class="lb-cap">
       <div class="lb-no" id="lb-no"></div>
-      <div class="lb-name">Parable Art &middot; Richard Pierro</div>
-      <a id="lb-scr" class="scr-btn" href="#" target="_blank" rel="noopener">Read Scripture</a>
+      <div class="lb-name" id="lb-name"></div>
+      <button class="lb-scr-btn" id="lb-scr" aria-label="Read Scripture">Read Scripture</button>
     </div>
     <div class="lb-nav">
       <button class="lb-arrow" id="lb-prev" aria-label="Previous">&#8592;</button>
@@ -804,29 +990,29 @@
 
 <!-- ══ SCRIPTS ════════════════════════════════════ -->
 <script>
-/* ── PAINTINGS DATA ────────────────────────────── */
+/* ── PAINTINGS DATA (with names from scripture PDFs) ── */
 const paintings = [
-  { num:'01',  file:'1000%20pixel/01_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture1.pdf'  },
-  { num:'02',  file:'1000%20pixel/02a_Richard_Pierro_A_Stroll_Through_The_Bible_-2_1000_pixel.jpg', scr:'Scripture/ParableArtScripture2.pdf'  },
-  { num:'02a', file:'1000%20pixel/02a_Richard_Pierro_A_Stroll_Through_The_Bible_-2_1000_pixel.jpg', scr:'Scripture/ParableArtScripture2A.pdf' },
-  { num:'03',  file:'1000%20pixel/03_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture3.pdf'  },
-  { num:'04',  file:'1000%20pixel/04_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture4.pdf'  },
-  { num:'05',  file:'1000%20pixel/05_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture5.pdf'  },
-  { num:'06',  file:'1000%20pixel/06_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture6.pdf'  },
-  { num:'07',  file:'1000%20pixel/07_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture7.pdf'  },
-  { num:'08',  file:'1000%20pixel/08_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture8.pdf'  },
-  { num:'09',  file:'1000%20pixel/09_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture9.pdf'  },
-  { num:'10',  file:'1000%20pixel/10_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture10.pdf' },
-  { num:'11',  file:'1000%20pixel/11_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture11.pdf' },
-  { num:'12',  file:'1000%20pixel/12_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture12.pdf' },
-  { num:'13',  file:'1000%20pixel/13_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture13.pdf' },
-  { num:'14',  file:'1000%20pixel/14_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture14.pdf' },
-  { num:'15',  file:'1000%20pixel/15_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture15.pdf' },
-  { num:'16',  file:'1000%20pixel/16_Pierro_Richard_18x24_print_file_1000_pixel.jpg',               scr:'Scripture/ParableArtScripture16.pdf' },
-  { num:'17',  file:'1000%20pixel/17_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture17.pdf' },
-  { num:'18',  file:'1000%20pixel/18_Richard_Pierro_A_Stroll_Through_The_Bible_-2_1000_pixel.jpg',  scr:'Scripture/ParableArtScripture18.pdf' },
-  { num:'19',  file:'1000%20pixel/19_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture19.pdf' },
-  { num:'20',  file:'1000%20pixel/20_Richard_Pierro_A_Stroll_Through_The_Bible_-2_1000_pixel.jpg',  scr:'Scripture/ParableArtScripture20.pdf' },
+  { num:'01',  name:'The Beginning',       file:'1000%20pixel/01_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture1.pdf'  },
+  { num:'02',  name:'Creation of Man',     file:'1000%20pixel/02a_Richard_Pierro_A_Stroll_Through_The_Bible_-2_1000_pixel.jpg', scr:'Scripture/ParableArtScripture2.pdf'  },
+  { num:'02a', name:'Creation of Woman',   file:'1000%20pixel/02a_Richard_Pierro_A_Stroll_Through_The_Bible_-2_1000_pixel.jpg', scr:'Scripture/ParableArtScripture2A.pdf' },
+  { num:'03',  name:'Adam & Eve',          file:'1000%20pixel/03_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture3.pdf'  },
+  { num:'04',  name:'Fall of Adam',        file:'1000%20pixel/04_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture4.pdf'  },
+  { num:'05',  name:'Mother of Mankind',   file:'1000%20pixel/05_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture5.pdf'  },
+  { num:'06',  name:'Cain & Abel',         file:'1000%20pixel/06_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture6.pdf'  },
+  { num:'07',  name:'Noah\'s Ark',         file:'1000%20pixel/07_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture7.pdf'  },
+  { num:'08',  name:'Way of Holiness',     file:'1000%20pixel/08_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture8.pdf'  },
+  { num:'09',  name:'Birth of Jesus',      file:'1000%20pixel/09_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture9.pdf'  },
+  { num:'10',  name:'The Magi Visit',      file:'1000%20pixel/10_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture10.pdf' },
+  { num:'11',  name:'Fishers of Men',      file:'1000%20pixel/11_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture11.pdf' },
+  { num:'12',  name:'The Sermon',          file:'1000%20pixel/12_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture12.pdf' },
+  { num:'13',  name:'The Last Supper',     file:'1000%20pixel/13_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture13.pdf' },
+  { num:'14',  name:'Mocking Jesus',       file:'1000%20pixel/14_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture14.pdf' },
+  { num:'15',  name:'Repentant Criminal',  file:'1000%20pixel/15_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture15.pdf' },
+  { num:'16',  name:'Death of Jesus',      file:'1000%20pixel/16_Pierro_Richard_18x24_print_file_1000_pixel.jpg',               scr:'Scripture/ParableArtScripture16.pdf' },
+  { num:'17',  name:'Burial of Jesus',     file:'1000%20pixel/17_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture17.pdf' },
+  { num:'18',  name:'Jesus is Risen',      file:'1000%20pixel/18_Richard_Pierro_A_Stroll_Through_The_Bible_-2_1000_pixel.jpg',  scr:'Scripture/ParableArtScripture18.pdf' },
+  { num:'19',  name:'Life in the Spirit',  file:'1000%20pixel/19_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg',   scr:'Scripture/ParableArtScripture19.pdf' },
+  { num:'20',  name:'Lake of Fire',        file:'1000%20pixel/20_Richard_Pierro_A_Stroll_Through_The_Bible_-2_1000_pixel.jpg',  scr:'Scripture/ParableArtScripture20.pdf' },
 ];
 
 /* ── HOLY LAND DATA ────────────────────────────── */
@@ -844,6 +1030,28 @@ const holyLandPhotos = [
   { file:'BookPhotosDPIweb/KingDavidInscription.jpg',   cap:'King David Inscription' },
   { file:'BookPhotosDPIweb/ColumbariumCave.jpg',        cap:'Columbarium Cave' },
 ];
+
+/* ── PDF VIEWER ───────────────────────────────── */
+const pdfViewer = document.getElementById('pdfViewer');
+const pdfFrame = document.getElementById('pdfFrame');
+const pdfTitle = document.getElementById('pdfTitle');
+
+function openPDF(url, title) {
+  pdfTitle.textContent = title || 'Scripture';
+  pdfFrame.src = url;
+  pdfViewer.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closePDF() {
+  pdfViewer.classList.remove('open');
+  pdfFrame.src = '';
+  document.body.style.overflow = '';
+}
+document.getElementById('pdfClose').addEventListener('click', closePDF);
+// Click outside the header to close
+pdfViewer.addEventListener('click', function(e) {
+  if (e.target === pdfViewer) closePDF();
+});
 
 /* ── CAROUSEL ENGINE ──────────────────────────── */
 function initCarousel(trackId, prevId, nextId, counterId, dotsId, slides, renderSlide) {
@@ -908,20 +1116,21 @@ const galleryGoTo = initCarousel(
   'galleryTrack', 'galleryPrev', 'galleryNext', 'galleryCounter', 'galleryDots',
   paintings,
   (p, i) => `
-    <div class="carousel-img-wrap" style="cursor:pointer;" onclick="openLB(${i})">
-      <img src="${p.file}" alt="Parable Art No.${p.num} by Richard Pierro" loading="lazy">
+    <div class="carousel-img-wrap" style="cursor:pointer;" onclick="openPDF('${p.scr}', 'Parable Art #${p.num} — ${p.name.replace(/'/g, "\\'")}')">
+      <img src="${p.file}" alt="Parable Art #${p.num} — ${p.name}" loading="lazy">
     </div>
     <div class="gallery-slide-info">
-      <div class="art-no">No. ${p.num}</div>
-      <div class="art-name">Parable Art &middot; Richard Pierro</div>
-      <a class="scr-btn" href="${p.scr}" target="_blank" rel="noopener">Read Scripture</a>
+      <div class="art-no">Parable Art #${p.num}</div>
+      <div class="art-name">${p.name}</div>
+      <button class="scr-btn" onclick="openPDF('${p.scr}', 'Parable Art #${p.num} — ${p.name.replace(/'/g, "\\'")}')">Read Scripture</button>
     </div>`
 );
 
-/* ── LIGHTBOX ──────────────────────────────────── */
+/* ── LIGHTBOX (painting zoom) ─────────────────── */
 const lb     = document.getElementById('lightbox');
 const lbImg  = document.getElementById('lb-img');
 const lbNo   = document.getElementById('lb-no');
+const lbName = document.getElementById('lb-name');
 const lbScr  = document.getElementById('lb-scr');
 let cur = 0;
 
@@ -929,19 +1138,37 @@ function openLB(i) {
   cur = i;
   const p = paintings[i];
   lbImg.src = p.file;
-  lbImg.alt = 'Parable Art No.' + p.num + ' by Richard Pierro';
-  lbNo.textContent = 'No. ' + p.num + ' of 20';
-  lbScr.href = p.scr;
+  lbImg.alt = 'Parable Art #' + p.num + ' — ' + p.name;
+  lbNo.textContent = 'Parable Art #' + p.num;
+  lbName.textContent = p.name;
   lb.classList.add('open');
   document.body.style.overflow = 'hidden';
 }
 function closeLB() { lb.classList.remove('open'); document.body.style.overflow = ''; }
+
+// Clicking the image in lightbox opens the PDF
+lbImg.addEventListener('click', function() {
+  const p = paintings[cur];
+  closeLB();
+  openPDF(p.scr, 'Parable Art #' + p.num + ' — ' + p.name);
+});
+
+// Read Scripture button in lightbox
+lbScr.addEventListener('click', function() {
+  const p = paintings[cur];
+  closeLB();
+  openPDF(p.scr, 'Parable Art #' + p.num + ' — ' + p.name);
+});
 
 document.getElementById('lb-close').addEventListener('click', closeLB);
 lb.addEventListener('click', e => { if (e.target === lb) closeLB(); });
 document.getElementById('lb-next').addEventListener('click', () => openLB((cur+1) % paintings.length));
 document.getElementById('lb-prev').addEventListener('click', () => openLB((cur-1+paintings.length) % paintings.length));
 document.addEventListener('keydown', e => {
+  if (pdfViewer.classList.contains('open')) {
+    if (e.key === 'Escape') closePDF();
+    return;
+  }
   if (!lb.classList.contains('open')) return;
   if (e.key === 'Escape')      closeLB();
   if (e.key === 'ArrowRight')  openLB((cur+1) % paintings.length);

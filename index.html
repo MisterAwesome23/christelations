@@ -12,6 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Cinzel:wght@400;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
   <style>
     /* ── RESET ─────────────────────────────── */
@@ -312,63 +313,6 @@
       box-shadow: 0 4px 16px rgba(200,145,58,0.3);
     }
 
-    /* ── PDF VIEWER POPUP ──────────────────── */
-    #pdfViewer {
-      display: none;
-      position: fixed; inset: 0; z-index: 600;
-      background: rgba(6,5,14,0.97);
-      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-    }
-    #pdfViewer.open { display: flex; }
-    .pdf-header {
-      position: absolute; top: 0; left: 0; right: 0;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0.8rem 1.2rem;
-      background: rgba(6,5,14,0.95);
-      border-bottom: 1px solid rgba(200,145,58,0.2);
-      z-index: 10;
-    }
-    .pdf-title {
-      font-family: 'Cinzel', serif;
-      font-size: 0.72rem;
-      letter-spacing: 0.2em;
-      color: var(--gold);
-      text-transform: uppercase;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      flex: 1;
-      margin-right: 1rem;
-    }
-    #pdfClose {
-      background: var(--gold);
-      color: var(--bg);
-      border: none;
-      font-family: 'Cinzel', serif;
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      padding: 0.6rem 1.4rem;
-      border-radius: var(--radius);
-      cursor: pointer;
-      transition: all 0.2s;
-      flex-shrink: 0;
-      min-width: 80px;
-      text-align: center;
-    }
-    #pdfClose:hover { background: var(--gold-lt); }
-    #pdfFrame {
-      width: 100%;
-      height: 100%;
-      border: none;
-      margin-top: 52px;
-    }
-
     /* ── LIGHTBOX (painting zoom) ──────────── */
     #lightbox {
       display:none; position:fixed; inset:0; z-index:500;
@@ -664,13 +608,6 @@
         min-height: 48px;
       }
 
-      .pdf-header { padding: 0.6rem 0.8rem; }
-      #pdfClose {
-        font-size: 0.85rem;
-        padding: 0.65rem 1.4rem;
-        min-height: 48px;
-      }
-
       .btn {
         font-size: 0.85rem;
         padding: 1rem 2rem;
@@ -706,11 +643,113 @@
       }
       .lb-cap { margin-top: 0.5rem; }
       .lb-nav { margin-top: 0.5rem; }
+    }
 
-      .pdf-header {
-        padding: 0.5rem 0.8rem;
+    /* ── PDF VIEWER ─────────────────────────── */
+    #pdfModal {
+      display: none; position: fixed; inset: 0; z-index: 600;
+      background: rgba(0,0,0,0.96);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      align-items: center; justify-content: center;
+      padding: 0;
+    }
+    #pdfModal.open { display: flex; }
+    .pdf-viewer-container {
+      position: relative;
+      width: 100%; height: 100%; max-width: 100%;
+      background: var(--surface);
+      display: flex; flex-direction: column;
+    }
+    @media (min-width: 860px) {
+      .pdf-viewer-container {
+        width: min(880px, 94vw); height: min(94vh, 1100px);
+        border-radius: var(--radius);
+        box-shadow: 0 40px 120px rgba(0,0,0,0.8);
       }
-      #pdfFrame { margin-top: 42px; }
+    }
+    .pdf-toolbar {
+      display: flex; align-items: center; justify-content: center;
+      gap: 1rem 1.4rem; flex-wrap: wrap;
+      padding: 1rem 3.2rem 1rem 1.2rem;
+      border-bottom: 1px solid rgba(200,145,58,0.18);
+      background: var(--surface2);
+    }
+    .pdf-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem; color: var(--cream);
+      width: 100%; text-align: center;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .pdf-controls {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0.7rem; flex-wrap: wrap; width: 100%;
+    }
+    .pdf-btn {
+      display: flex; align-items: center; justify-content: center;
+      background: var(--gold); color: var(--bg);
+      border: none; border-radius: var(--radius);
+      padding: 0.8rem 1.3rem;
+      font-family: 'Cinzel', serif; font-size: 0.82rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      cursor: pointer; transition: all 0.2s;
+      font-weight: 700;
+      min-height: 46px;
+    }
+    .pdf-btn:hover { background: var(--gold-lt); transform: translateY(-1px); }
+    .pdf-btn:disabled { background: var(--muted); cursor: not-allowed; opacity: 0.45; transform: none; }
+    .pdf-page-info {
+      display: flex; align-items: center; gap: 0.2rem;
+      font-family: 'Cinzel', serif;
+      font-size: 0.95rem; color: var(--text); white-space: nowrap;
+    }
+    .pdf-page-input {
+      width: 3.2rem; text-align: center;
+      background: var(--bg); color: var(--cream);
+      border: 1px solid rgba(200,145,58,0.4); border-radius: var(--radius);
+      font-family: 'Cinzel', serif; font-size: 0.95rem;
+      padding: 0.6rem 0.3rem; min-height: 46px;
+      -moz-appearance: textfield;
+    }
+    .pdf-page-input::-webkit-outer-spin-button,
+    .pdf-page-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .pdf-viewer {
+      position: relative;
+      flex: 1; overflow: auto;
+      display: flex; align-items: flex-start; justify-content: center;
+      background: var(--bg);
+      padding: 1rem;
+      -webkit-overflow-scrolling: touch;
+      touch-action: pan-y;
+    }
+    #pdfCanvas {
+      max-width: 100%;
+      border-radius: 2px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      opacity: 0; transition: opacity 0.2s ease;
+    }
+    #pdfCanvas.ready { opacity: 1; }
+    .pdf-loading {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cinzel', serif; font-size: 0.85rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--gold); background: var(--bg);
+      z-index: 1; opacity: 0; pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .pdf-loading.show { opacity: 1; }
+    .pdf-close {
+      position: absolute; top: 1rem; right: 1rem;
+      background: rgba(0,0,0,0.35); border: none; color: var(--cream);
+      font-size: 1.5rem; line-height: 1; cursor: pointer; transition: all 0.2s;
+      z-index: 10; width: 44px; height: 44px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .pdf-close:hover { background: var(--gold); color: var(--bg); }
+
+    @media (max-width: 600px) {
+      .pdf-toolbar { padding: 0.9rem 3rem 0.9rem 0.9rem; }
+      .pdf-btn { padding: 0.7rem 1rem; font-size: 0.72rem; }
     }
   </style>
 </head>
@@ -772,15 +811,6 @@
   </div>
 </section>
 
-<!-- ══ PDF VIEWER POPUP ══════════════════════════ -->
-<div id="pdfViewer" role="dialog" aria-modal="true" aria-label="Scripture viewer">
-  <div class="pdf-header">
-    <span class="pdf-title" id="pdfTitle"></span>
-    <button id="pdfClose">Close</button>
-  </div>
-  <iframe id="pdfFrame" src="" title="Scripture PDF"></iframe>
-</div>
-
 <!-- ══ LIGHTBOX (painting zoom) ═════════════════ -->
 <div id="lightbox" role="dialog" aria-modal="true" aria-label="Artwork viewer">
   <div class="lb-inner">
@@ -841,6 +871,31 @@
     </div>
   </div>
 </section>
+
+<!-- ══ PDF VIEWER MODAL ═══════════════════════════ -->
+<div id="pdfModal" role="dialog" aria-modal="true" aria-label="PDF Reader">
+  <div class="pdf-viewer-container">
+    <button class="pdf-close" id="pdfClose" aria-label="Close PDF reader">✕</button>
+
+    <div class="pdf-toolbar">
+      <div class="pdf-title" id="pdfTitle">Reading Preview</div>
+      <div class="pdf-controls">
+        <button class="pdf-btn" id="pdfPrev" aria-label="Previous page">← Prev</button>
+        <div class="pdf-page-info">
+          <input type="number" id="pdfPageInput" class="pdf-page-input" min="1" value="1" aria-label="Jump to page">
+          <span>&nbsp;/&nbsp;<span id="pdfPageTotal">1</span></span>
+        </div>
+        <button class="pdf-btn" id="pdfNext" aria-label="Next page">Next →</button>
+        <button class="pdf-btn" id="pdfDownload" aria-label="Download PDF">⬇ Download</button>
+      </div>
+    </div>
+
+    <div class="pdf-viewer">
+      <div id="pdfLoading" class="pdf-loading">Loading pages&hellip;</div>
+      <canvas id="pdfCanvas"></canvas>
+    </div>
+  </div>
+</div>
 
 <!-- ══ HOLY LAND (Carousel) ═══════════════════════ -->
 <section id="holy-land">
@@ -1031,28 +1086,6 @@ const holyLandPhotos = [
   { file:'BookPhotosDPIweb/ColumbariumCave.jpg',        cap:'Columbarium Cave' },
 ];
 
-/* ── PDF VIEWER ───────────────────────────────── */
-const pdfViewer = document.getElementById('pdfViewer');
-const pdfFrame = document.getElementById('pdfFrame');
-const pdfTitle = document.getElementById('pdfTitle');
-
-function openPDF(url, title) {
-  pdfTitle.textContent = title || 'Scripture';
-  pdfFrame.src = url;
-  pdfViewer.classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-function closePDF() {
-  pdfViewer.classList.remove('open');
-  pdfFrame.src = '';
-  document.body.style.overflow = '';
-}
-document.getElementById('pdfClose').addEventListener('click', closePDF);
-// Click outside the header to close
-pdfViewer.addEventListener('click', function(e) {
-  if (e.target === pdfViewer) closePDF();
-});
-
 /* ── CAROUSEL ENGINE ──────────────────────────── */
 function initCarousel(trackId, prevId, nextId, counterId, dotsId, slides, renderSlide) {
   const track = document.getElementById(trackId);
@@ -1165,10 +1198,7 @@ lb.addEventListener('click', e => { if (e.target === lb) closeLB(); });
 document.getElementById('lb-next').addEventListener('click', () => openLB((cur+1) % paintings.length));
 document.getElementById('lb-prev').addEventListener('click', () => openLB((cur-1+paintings.length) % paintings.length));
 document.addEventListener('keydown', e => {
-  if (pdfViewer.classList.contains('open')) {
-    if (e.key === 'Escape') closePDF();
-    return;
-  }
+  if (document.getElementById('pdfModal').classList.contains('open')) return;
   if (!lb.classList.contains('open')) return;
   if (e.key === 'Escape')      closeLB();
   if (e.key === 'ArrowRight')  openLB((cur+1) % paintings.length);
@@ -1203,6 +1233,158 @@ const io = new IntersectionObserver(entries =>
   { threshold: 0.08, rootMargin: '0px 0px -50px 0px' }
 );
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+/* ── PDF VIEWER ────────────────────────────────── */
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+const pdfModal    = document.getElementById('pdfModal');
+const pdfCanvas   = document.getElementById('pdfCanvas');
+const pdfLoading  = document.getElementById('pdfLoading');
+const pdfPageIn   = document.getElementById('pdfPageInput');
+const pdfPageTot  = document.getElementById('pdfPageTotal');
+const pdfPrevBtn  = document.getElementById('pdfPrev');
+const pdfNextBtn  = document.getElementById('pdfNext');
+
+let pdfDoc = null;
+let pageNum = 1;
+let pdfUrl = '';
+let renderTask = null;
+
+function fitScale(page) {
+  const container = pdfCanvas.closest('.pdf-viewer');
+  const availWidth = container.clientWidth - 32; // account for padding
+  const baseViewport = page.getViewport({ scale: 1 });
+  const dpr = window.devicePixelRatio || 1;
+  return Math.min((availWidth / baseViewport.width), 2.2) * dpr;
+}
+
+async function renderPage(num) {
+  if (!pdfDoc) return;
+  pdfLoading.classList.add('show');
+  pdfCanvas.classList.remove('ready');
+
+  if (renderTask) { try { renderTask.cancel(); } catch (e) {} }
+
+  const page = await pdfDoc.getPage(num);
+  const scale = fitScale(page);
+  const viewport = page.getViewport({ scale });
+  const dpr = window.devicePixelRatio || 1;
+
+  pdfCanvas.width = viewport.width;
+  pdfCanvas.height = viewport.height;
+  pdfCanvas.style.width = (viewport.width / dpr) + 'px';
+  pdfCanvas.style.height = (viewport.height / dpr) + 'px';
+
+  const ctx = pdfCanvas.getContext('2d');
+  renderTask = page.render({ canvasContext: ctx, viewport: viewport });
+
+  try {
+    await renderTask.promise;
+  } catch (e) {
+    if (e && e.name === 'RenderingCancelledException') return;
+    console.error('Error rendering page:', e);
+  }
+
+  pdfLoading.classList.remove('show');
+  pdfCanvas.classList.add('ready');
+  pdfPageIn.value = num;
+  pdfPageIn.max = pdfDoc.numPages;
+  pdfPageTot.textContent = pdfDoc.numPages;
+  pdfPrevBtn.disabled = num <= 1;
+  pdfNextBtn.disabled = num >= pdfDoc.numPages;
+  document.querySelector('.pdf-viewer').scrollTop = 0;
+}
+
+function goToPage(num) {
+  if (!pdfDoc) return;
+  num = Math.max(1, Math.min(num, pdfDoc.numPages));
+  if (num === pageNum) return;
+  pageNum = num;
+  renderPage(pageNum);
+}
+
+async function openPDF(url, title) {
+  pdfUrl = url;
+  pageNum = 1;
+  pdfDoc = null;
+  document.getElementById('pdfTitle').textContent = title || 'Reading Preview';
+  pdfModal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  pdfLoading.textContent = 'Loading pages…';
+  pdfLoading.classList.add('show');
+  pdfCanvas.classList.remove('ready');
+
+  try {
+    pdfDoc = await pdfjsLib.getDocument(url).promise;
+    renderPage(pageNum);
+  } catch (e) {
+    console.error('Error loading PDF:', e);
+    pdfLoading.textContent = 'Could not load this page. Please use Download instead.';
+  }
+}
+
+function closePDF() {
+  pdfModal.classList.remove('open');
+  document.body.style.overflow = '';
+  pdfDoc = null;
+}
+
+pdfPrevBtn.addEventListener('click', () => goToPage(pageNum - 1));
+pdfNextBtn.addEventListener('click', () => goToPage(pageNum + 1));
+
+pdfPageIn.addEventListener('change', () => goToPage(parseInt(pdfPageIn.value, 10) || 1));
+pdfPageIn.addEventListener('keydown', e => { if (e.key === 'Enter') pdfPageIn.blur(); });
+
+document.getElementById('pdfDownload').addEventListener('click', () => {
+  const a = document.createElement('a');
+  a.href = pdfUrl;
+  a.download = pdfUrl.split('/').pop();
+  a.setAttribute('data-pdf-download', 'true');
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+});
+
+document.getElementById('pdfClose').addEventListener('click', closePDF);
+pdfModal.addEventListener('click', e => { if (e.target === pdfModal) closePDF(); });
+
+document.addEventListener('keydown', e => {
+  if (!pdfModal.classList.contains('open')) return;
+  if (document.activeElement === pdfPageIn) return;
+  if (e.key === 'Escape') closePDF();
+  if (e.key === 'ArrowLeft')  goToPage(pageNum - 1);
+  if (e.key === 'ArrowRight') goToPage(pageNum + 1);
+});
+
+// swipe to turn pages on touch devices
+let pdfTouchStartX = 0, pdfTouchDiff = 0;
+const pdfViewerEl = document.querySelector('.pdf-viewer');
+pdfViewerEl.addEventListener('touchstart', e => { pdfTouchStartX = e.touches[0].clientX; }, {passive:true});
+pdfViewerEl.addEventListener('touchmove',  e => { pdfTouchDiff = e.touches[0].clientX - pdfTouchStartX; }, {passive:true});
+pdfViewerEl.addEventListener('touchend', () => {
+  if (Math.abs(pdfTouchDiff) > 60) {
+    if (pdfTouchDiff < 0) goToPage(pageNum + 1);
+    else goToPage(pageNum - 1);
+  }
+  pdfTouchDiff = 0;
+});
+
+// re-fit current page if the window/orientation changes
+let pdfResizeTimer;
+window.addEventListener('resize', () => {
+  if (!pdfModal.classList.contains('open')) return;
+  clearTimeout(pdfResizeTimer);
+  pdfResizeTimer = setTimeout(() => renderPage(pageNum), 200);
+});
+
+// catch every PDF link on the site — present or future
+document.addEventListener('click', e => {
+  const link = e.target.closest('a[href$=".pdf"]:not([data-pdf-download])');
+  if (!link) return;
+  e.preventDefault();
+  const title = link.textContent.trim() || link.href.split('/').pop();
+  openPDF(link.getAttribute('href'), title);
+});
 </script>
 </body>
 </html>

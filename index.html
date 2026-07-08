@@ -236,6 +236,14 @@
       height: min(65vh, 560px);
       width: 100%;
     }
+    /* Warm paper tint — matches the original painting/paper tone, corrects the too-white scans */
+    .painting-tint { position: relative; }
+    .painting-tint::after {
+      content: ''; position: absolute; inset: 0;
+      background: rgba(232, 199, 118, 0.16);
+      mix-blend-mode: multiply;
+      pointer-events: none;
+    }
     .carousel-slide img {
       max-width: min(560px, 90vw);
       max-height: 100%;
@@ -325,10 +333,16 @@
       position:relative; max-width:780px; width:100%;
       display:flex; flex-direction:column; align-items:center;
     }
-    #lb-img {
-      max-height:60vh; max-width:100%; object-fit:contain;
+    .lb-img-wrap {
+      position: relative; display: inline-block;
+      max-height: 60vh; max-width: 100%;
       border-radius: var(--radius);
+      overflow: hidden;
       box-shadow: 0 0 100px rgba(200,145,58,0.12);
+    }
+    #lb-img {
+      display: block;
+      max-height:60vh; max-width:100%; object-fit:contain;
       cursor: pointer;
     }
     .lb-cap { margin-top:1rem; text-align:center; }
@@ -636,46 +650,13 @@
       .hero-intro { margin-bottom: 1.2rem; }
       .hero-scroll { display: none; }
 
-      #lb-img { max-height: 45vh; }
+      .lb-img-wrap, #lb-img { max-height: 45vh; }
       #lb-close {
         position: fixed; top: 0.5rem; right: 0.5rem;
         z-index: 510;
       }
       .lb-cap { margin-top: 0.5rem; }
       .lb-nav { margin-top: 0.5rem; }
-    }
-
-    /* ── COLOR TEST (temporary — for author review) ── */
-    #colorTest { background: var(--surface2); border-top: 1px dashed rgba(200,145,58,0.3); border-bottom: 1px dashed rgba(200,145,58,0.3); }
-    .ct-flag {
-      display: inline-block; font-family: 'Cinzel', serif; font-size: 0.62rem;
-      letter-spacing: 0.2em; text-transform: uppercase; color: var(--bg);
-      background: var(--gold); padding: 0.3rem 0.9rem; border-radius: var(--radius);
-      margin-bottom: 1rem;
-    }
-    .ct-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
-      margin-top: 2.5rem;
-    }
-    .ct-card { text-align: center; }
-    .ct-card img {
-      width: 100%; border-radius: var(--radius);
-      border: 1px solid rgba(200,145,58,0.2);
-    }
-    .ct-card-label {
-      font-family: 'Cinzel', serif; font-size: 0.75rem; letter-spacing: 0.12em;
-      text-transform: uppercase; color: var(--gold-lt); margin-top: 1rem;
-    }
-    .ct-tint-wrap { position: relative; overflow: hidden; border-radius: var(--radius); }
-    .ct-tint-wrap::after {
-      content: ''; position: absolute; inset: 0;
-      background: rgba(232, 199, 118, 0.16);
-      mix-blend-mode: multiply;
-      pointer-events: none;
-    }
-    .ct-tint-wrap img { filter: saturate(1.04); }
-    @media (max-width: 700px) {
-      .ct-grid { grid-template-columns: 1fr; }
     }
 
     /* ── PDF VIEWER ─────────────────────────── */
@@ -848,7 +829,9 @@
 <div id="lightbox" role="dialog" aria-modal="true" aria-label="Artwork viewer">
   <div class="lb-inner">
     <button id="lb-close" aria-label="Close viewer">Close</button>
-    <img id="lb-img" src="" alt="">
+    <div class="lb-img-wrap" id="lbImgWrap">
+      <img id="lb-img" src="" alt="">
+    </div>
     <div class="lb-cap">
       <div class="lb-no" id="lb-no"></div>
       <div class="lb-name" id="lb-name"></div>
@@ -949,31 +932,6 @@
     </div>
     <div class="carousel-counter" id="holyCounter"></div>
     <div class="carousel-dots" id="holyDots"></div>
-  </div>
-</section>
-
-<!-- ══ COLOR TEST (temporary — remove after author review) ══ -->
-<section id="colorTest">
-  <div class="container">
-    <div style="text-align:center;">
-      <span class="ct-flag">For Author Review Only</span>
-      <h2 class="heading" style="margin-bottom:0.6rem;">Paper Tint Test<br><em>Painting #21</em></h2>
-      <p style="max-width:560px;margin:0 auto;color:var(--muted);">
-        A test of a very subtle warm tint to better match the actual color of the original painting and paper, versus the current scan which reads too white. Compare the two below.
-      </p>
-    </div>
-    <div class="ct-grid">
-      <div class="ct-card">
-        <img src="1000%20pixel/21_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg" alt="Painting 21 — current, unedited scan">
-        <div class="ct-card-label">Current (Unedited)</div>
-      </div>
-      <div class="ct-card">
-        <div class="ct-tint-wrap">
-          <img src="1000%20pixel/21_Richard_Pierro_A_Stroll_Through_The_Bible__1000_pixel.jpg" alt="Painting 21 — with warm paper tint applied">
-        </div>
-        <div class="ct-card-label">With Warm Paper Tint</div>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -1207,11 +1165,11 @@ const galleryGoTo = initCarousel(
   'galleryTrack', 'galleryPrev', 'galleryNext', 'galleryCounter', 'galleryDots',
   paintings,
   (p, i) => `
-    <div class="carousel-img-wrap" style="cursor:pointer;" onclick="openPDF('${p.scr}', 'Parable Art #${p.num} — ${p.name.replace(/'/g, "\\'")}')">
+    <div class="carousel-img-wrap${p.num === '20' ? ' painting-tint' : ''}" style="cursor:pointer;" onclick="openPDF('${p.scr}', 'Parable Art #${p.num} — ${p.name.replace(/'/g, "\\'")}')">
       <img src="${p.file}" alt="Parable Art #${p.num} — ${p.name}" loading="lazy">
     </div>
     <div class="gallery-slide-info">
-      <div class="art-no">Parable Art #${p.num}</div>
+      <div class="art-no">Parable Art #${p.num}${p.num === '20' ? ' &middot; <span style="color:var(--gold-lt);">Tint Preview</span>' : ''}</div>
       <div class="art-name">${p.name}</div>
       <button class="scr-btn" onclick="openPDF('${p.scr}', 'Parable Art #${p.num} — ${p.name.replace(/'/g, "\\'")}')">Read Scripture</button>
     </div>`
@@ -1219,10 +1177,11 @@ const galleryGoTo = initCarousel(
 
 /* ── LIGHTBOX (painting zoom) ─────────────────── */
 const lb     = document.getElementById('lightbox');
-const lbImg  = document.getElementById('lb-img');
-const lbNo   = document.getElementById('lb-no');
-const lbName = document.getElementById('lb-name');
-const lbScr  = document.getElementById('lb-scr');
+const lbImg     = document.getElementById('lb-img');
+const lbImgWrap = document.getElementById('lbImgWrap');
+const lbNo      = document.getElementById('lb-no');
+const lbName    = document.getElementById('lb-name');
+const lbScr     = document.getElementById('lb-scr');
 let cur = 0;
 
 function openLB(i) {
@@ -1230,8 +1189,9 @@ function openLB(i) {
   const p = paintings[i];
   lbImg.src = p.file;
   lbImg.alt = 'Parable Art #' + p.num + ' — ' + p.name;
-  lbNo.textContent = 'Parable Art #' + p.num;
+  lbNo.textContent = 'Parable Art #' + p.num + (p.num === '20' ? ' · Tint Preview' : '');
   lbName.textContent = p.name;
+  lbImgWrap.classList.toggle('painting-tint', p.num === '20');
   lb.classList.add('open');
   document.body.style.overflow = 'hidden';
 }
